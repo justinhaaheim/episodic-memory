@@ -1,15 +1,10 @@
-import { pipeline, env } from '@xenova/transformers';
-// Configure transformers to avoid stdout pollution (MCP uses stdout for JSON-RPC)
-env.allowLocalModels = true;
-env.useBrowserCache = false;
+import { pipeline } from '@xenova/transformers';
 let embeddingPipeline = null;
 export async function initEmbeddings() {
     if (!embeddingPipeline) {
-        // Use stderr to avoid breaking MCP JSON protocol on stdout
-        console.error('Loading embedding model (first run may take time)...');
-        embeddingPipeline = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', { progress_callback: () => { } } // Suppress progress output to stdout
-        );
-        console.error('Embedding model loaded');
+        console.log('Loading embedding model (first run may take time)...');
+        embeddingPipeline = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
+        console.log('Embedding model loaded');
     }
 }
 export async function generateEmbedding(text) {
